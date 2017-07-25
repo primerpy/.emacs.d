@@ -1234,6 +1234,11 @@ Convenience bindings to use doc-view with the arrow keys.
 #+begin_src emacs-lisp
 #+end_src
 * Python IDE
+** Set Environment Python, use python3
+#+begin_src emacs-lisp
+(setq py-python-command "/home/isaac/anaconda3/bin/python3")
+#+end_src
+
 ** IDE Setup 
 
  #+begin_src emacs-lisp
