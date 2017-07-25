@@ -1234,7 +1234,9 @@ Convenience bindings to use doc-view with the arrow keys.
 #+begin_src emacs-lisp
 #+end_src
 * Python IDE
-#+begin_src emacs-lisp
+** IDE Setup 
+
+ #+begin_src emacs-lisp
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives
@@ -1425,7 +1427,7 @@ May be necessary for some GUI environments (e.g., Mac OS X)")
 
     ))
 ;; End of Python IDE set up
-#+end_src
+ #+end_src
 * Neotree
 #+begin_src emacs-lisp
 (add-to-list 'load-path "/home/isaac/.emacs.d/neotree")
