@@ -1244,8 +1244,6 @@ Convenience bindings to use doc-view with the arrow keys.
  #+begin_src emacs-lisp
 (require 'package)
 (package-initialize)
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (defvar local-packages '(projectile auto-complete epc jedi))
 
