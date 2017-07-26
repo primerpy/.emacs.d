@@ -320,12 +320,25 @@ good column number to do that.
 (setq org-tags-column 45)
 #+end_src
 
+** Set Enironment Path
+#+begin_src emacs-lisp
+(setq org-babel-python-command "/home/isaac/anaconda3/bin/python3")
+(setq py-python-command "/home/isaac/anaconda3/bin/python3")
+(setq exec-path (append exec-path '("/home/isaac/anaconda3/bin/")))
+(setq python-shell-prompt-detect-failure-warning nil)
+#+end_src
+
 ** Org babel languages
 
+
 #+begin_src emacs-lisp
+(require 'org-install)
+(require 'ob-ipython)
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)
+   (ipython . t)
    (C . t)
    (calc . t)
    (latex . t)
@@ -341,10 +354,14 @@ good column number to do that.
   "Do not confirm evaluation for these languages."
   (not (or (string= lang "C")
            (string= lang "java")
+           (string= lang "ipython")
            (string= lang "python")
            (string= lang "emacs-lisp")
            (string= lang "sqlite"))))
 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+;;; display/update images in the buffer after I evaluate
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
 #+end_src
 
 ** Org babel/source blocks
@@ -1439,7 +1456,13 @@ May be necessary for some GUI environments (e.g., Mac OS X)")
 (setq-default neo-show-hidden-files t)
 #+end_src
 * General Setup
-#+begin_src emacs-lisp
+** Auto pairing parenthesis etc.
+ #+begin_src emacs-lisp
 (electric-pair-mode 1)
-(global-visual-line-mode 1)
-#+end_src
+ #+end_src
+** Snippet
+I want to load sinppets in orgmode
+ #+begin_src emacs-lisp
+(require 'yasnippet)
+(yas-global-mode 1)
+ #+end_src
