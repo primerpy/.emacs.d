@@ -1,4 +1,20 @@
-#name : Doctype HTML 4.01 Strict
+#name : DocType XHTML 1.0 frameset
 #group : meta
+# key : doc
 # --
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
+  <html>
+    <head>
+        <title>Demo</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo Project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <style type="text/css"></style>
+    </head>
+    <body>
+        <p>Let the game begin!</p>
+        <script type="text/javascript"></script>
+    </body>
+  </html>
