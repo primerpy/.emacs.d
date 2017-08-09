@@ -45,4 +45,5 @@
       '(
         dired-unmark-backward
         markdown-exdent-or-delete
+        mouse-set-region
         ))
