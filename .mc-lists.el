@@ -24,6 +24,7 @@
         mc/mark-next-line-like-this
         org-beginning-of-line
         org-ctrl-c-ctrl-c
+        org-cycle
         org-delete-char
         org-end-of-line
         org-force-self-insert
@@ -44,6 +45,7 @@
 (setq mc/cmds-to-run-once
       '(
         dired-unmark-backward
+        end-of-buffer
         markdown-exdent-or-delete
         mouse-set-region
         ))
