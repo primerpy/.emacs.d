@@ -976,6 +976,7 @@ idle time.
 According to [[http://emmet.io/][their website]], "Emmet — the essential toolkit for web-developers."
 
 #+begin_src emacs-lisp
+(emmet-mode t)
 (use-package emmet-mode
   :ensure t
   :commands emmet-mode
@@ -1466,3 +1467,8 @@ I want to load sinppets in orgmode
 (require 'yasnippet)
 (yas-global-mode 1)
  #+end_src
+* Javascript
+enable js2-mode
+#+begin_src emacs-lisp
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+#+end_src
