@@ -15,6 +15,7 @@
         dabbrev-expand
         delete-horizontal-space
         electric-newline-and-maybe-indent
+        emmet-expand-line
         end-of-visual-line
         helm-confirm-and-exit-minibuffer
         indent-for-tab-command
