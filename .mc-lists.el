@@ -19,6 +19,7 @@
         end-of-visual-line
         helm-confirm-and-exit-minibuffer
         indent-for-tab-command
+        kill-region
         kill-visual-line
         mark-whole-buffer
         markdown-insert-bold
