@@ -33,6 +33,7 @@
         org-metaright
         org-self-insert-command
         org-shiftmetaright
+        org-time-stamp
         org-yank
         other-frame
         sgml-close-tag
