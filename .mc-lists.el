@@ -19,6 +19,7 @@
         end-of-visual-line
         helm-confirm-and-exit-minibuffer
         indent-for-tab-command
+        kill-region
         kill-visual-line
         mark-whole-buffer
         markdown-insert-bold
@@ -33,6 +34,7 @@
         org-metaright
         org-self-insert-command
         org-shiftmetaright
+        org-time-stamp
         org-yank
         other-frame
         sgml-close-tag
