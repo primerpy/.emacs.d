@@ -350,15 +350,8 @@ good column number to do that.
    (sqlite . t)
    (js . t)))
 
-(defun my-org-confirm-babel-evaluate (lang body)
-  "Do not confirm evaluation for these languages."
-  (not (or (string= lang "C")
-           (string= lang "java")
-           (string= lang "ipython")
-           (string= lang "python")
-           (string= lang "emacs-lisp")
-           (string= lang "sqlite"))))
-(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+(setq org-confirm-babel-evaluate nil)
 
 ;;; display/update images in the buffer after I evaluate
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
