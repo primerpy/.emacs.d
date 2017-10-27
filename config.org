@@ -350,15 +350,8 @@ good column number to do that.
    (sqlite . t)
    (js . t)))
 
-(defun my-org-confirm-babel-evaluate (lang body)
-  "Do not confirm evaluation for these languages."
-  (not (or (string= lang "C")
-           (string= lang "java")
-           (string= lang "ipython")
-           (string= lang "python")
-           (string= lang "emacs-lisp")
-           (string= lang "sqlite"))))
-(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+(setq org-confirm-babel-evaluate nil)
 
 ;;; display/update images in the buffer after I evaluate
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
@@ -623,7 +616,7 @@ access magit.
 (use-package magit
   :ensure t
   :defer t
-  :bind ("C-c g" . magit-status)
+  :bind ("C-x g" . magit-status)
   :config
   (define-key magit-status-mode-map (kbd "q") 'magit-quit-session))
 #+end_src
@@ -1463,4 +1456,14 @@ I want to load sinppets in orgmode
 enable js2-mode
 #+begin_src emacs-lisp
 (add-hook 'js2-mode-hook 'ac-js2-mode)
+#+end_src
+* Autocomplete
+#+begin_src emacs-lisp
+(ac-config-default)
+(global-auto-complete-mode t)
+(setq ac-auto-show-menu    0.05)
+(setq ac-delay             0.05)
+(setq ac-menu-height       20)
+(setq ac-auto-start t)
+(setq ac-show-menu-immediately-on-auto-complete t)
 #+end_src
