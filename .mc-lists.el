@@ -50,6 +50,8 @@
       '(
         dired-unmark-backward
         end-of-buffer
+        helm-find-files
+        ido-kill-buffer
         markdown-exdent-or-delete
         mouse-set-region
         ))
