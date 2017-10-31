@@ -970,6 +970,7 @@ According to [[http://emmet.io/][their website]], "Emmet — the essential toolk
   (add-hook 'css-mode-hook 'emmet-mode))
 #+end_src
 
+
 ** Zoom-frm
 
 =zoom-frm= is a nice package that allows you to resize the text of
@@ -1467,3 +1468,53 @@ enable js2-mode
 (setq ac-auto-start t)
 (setq ac-show-menu-immediately-on-auto-complete t)
 #+end_src
+* Prettier
+#+begin_src emacs-lisp
+(require 'prettier-js)
+
+(defun enable-minor-mode (my-pair)
+  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+  (if (buffer-file-name)
+      (if (string-match (car my-pair) buffer-file-name)
+      (funcall (cdr my-pair)))))
+
+(add-hook 'web-mode-hook #'(lambda ()
+                            (enable-minor-mode
+                             '("\\.jsx?\\'" . prettier-js-mode))))
+
+(add-hook 'js2-mode-hook 'prettier-js-mode)
+;; (add-hook 'web-mode-hook 'prettier-js-mode)
+
+(setq prettier-js-args '(
+  "--trailing-comma" "all"
+  "--bracket-spacing" "false"
+))
+#+end_src
+* Node
+** Add Node Modules Path
+#+begin_src emacs-lisp
+(defvar add-node-modules-path-debug nil
+  "Enable verbose output when non nil.")
+
+;;;###autoload
+(defun add-node-modules-path ()
+  "Search the current buffer's parent directories for `node_modules/.bin`.
+If it's found, then add it to the `exec-path'."
+  (interactive)
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory)
+                "node_modules"))
+         (path (and root
+                    (expand-file-name "node_modules/.bin/" root))))
+    (if root
+        (progn
+          (make-local-variable 'exec-path)
+          (add-to-list 'exec-path path)
+          (when add-node-modules-path-debug
+            (message (concat "added " path  " to exec-path"))))
+      (when add-node-modules-path-debug
+        (message (concat "node_modules not found in " root))))))
+
+(provide 'add-node-modules-path)
+#+end_src
+
