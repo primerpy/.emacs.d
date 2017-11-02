@@ -1551,9 +1551,10 @@ If it's found, then add it to the `exec-path'."
   (interactive)
   ;; Save cursor position
   (save-excursion
-    ;; Go to top level heading for subtree
+    ;; Go to top level heading for subtree (you can change the number 10
+    ;; if you /really/ need more than 10 sublevels...)
     (unless (eq (org-current-level) 1)
-      (org-up-heading-all 10))
+      (outline-up-heading 10))
     ;; Set export format, pandoc options, post properties
     (let* ((org-pandoc-format 'markdown)
            (org-pandoc-options-for-markdown '((standalone . t)
@@ -1564,47 +1565,88 @@ If it's found, then add it to the `exec-path'."
            (title (format "\"%s\"" (org-element-property :title hl)))
            (slug (format "\"%s\"" (org-element-property :SLUG hl)))
            (date (format "\"%s\"" (org-element-property :DATE hl)))
-           (tags (org-get-tags-at))
+           (tags (format "[\"%s\"]" (org-element-property :TAGS hl)))
            (categories
-            (format "[\"%s\"]" (mapconcat 'identity tags "\",\""))))
-      (if (string= (org-get-todo-state) "DRAFT")
-          (message "Draft not exported")
-        (progn
-          ;; Make the export
-          (org-export-to-file
-              'pandoc
-              (org-export-output-file-name
-               (concat (make-temp-name ".tmp") ".org") t)
-            nil t nil nil nil
-            (lambda (f)
-              (org-pandoc-run-to-buffer-or-file f 'markdown t nil)))
-          ;; Use advice-add to add advice to existing process sentinel
-          ;; to modify file /after/ the export process has finished.
-          (advice-add
-           #'org-pandoc-sentinel
-           :after
-           `(lambda (process event)
-              (with-temp-file ,filename
-                (insert-file-contents ,filename)
-                (goto-char (point-min))
-                ;; Remove default header
-                (re-search-forward "---\\(.\\|\n\\)+?---\n\n")
-                (replace-match "")
-                (goto-char (point-min))
-                ;; Insert new properties
-                (insert
-                 (format
-                  "---\ntitle: %s\nslug: %s\ndate: %s\ncategories: %s\n---\n\n"
-                  ,title ,slug ,date ,categories))
-                ;; Demote headings and tweak code blocks
-                (dolist (reps '(("^#" . "##")
-                                ("``` {\\.\\(.+?\\)}" . "```\\1")))
-                  (goto-char (point-min))
-                  (while (re-search-forward (car reps) nil t)
-                    (replace-match (cdr reps))))))
-           '((name . "hugo-advice")))
-          ;; We don't want our advice to stick around afterwards
-          (advice-remove #'org-pandoc-sentinel 'hugo-advice)
-          (when (string= (org-get-todo-state) "↑")
-            (org-todo)))))))
+            (format "[\"%s\"]"
+                    (mapconcat 'identity (org-get-tags) "\",\""))))
+      ;; Make the export
+      (org-export-to-file
+          'pandoc
+          (org-export-output-file-name
+           (concat (make-temp-name ".tmp") ".org") t)
+        nil t nil nil nil
+        (lambda (f) (org-pandoc-run-to-buffer-or-file f 'markdown t nil)))
+      ;; Use advice-add to add advice to existing process sentinel
+      ;; to modify file /after/ the export process has finished.
+      (advice-add
+       #'org-pandoc-sentinel
+       :after
+       `(lambda (process event)
+          ;; Grab the file using with-temp-file, which saves our changes
+          ;; after evaluation.
+          (with-temp-file ,filename
+            (insert-file-contents ,filename)
+            (goto-char (point-min))
+            ;; Remove default header
+            (re-search-forward "---\\(.\\|\n\\)+?---\n\n")
+            (replace-match "")
+            (goto-char (point-min))
+            ;; Insert new properties
+            (insert
+             (format
+              "---\ntitle: %s\nslug: %s\ndate: %s\ntags: %s\n---\n\n"
+              ,title ,slug ,date ,tags))
+            ;; Demote headings and tweak code blocks
+            (dolist (reps '(("^#" . "##")
+                            ("\n``` {\\.\\(.+?\\)}" . "```\\1")))
+              (goto-char (point-min))
+              (while (re-search-forward (car reps) nil t)
+                (replace-match (cdr reps))))))
+       '((name . "hugo-advice")))
+      ;; We don't want our advice to stick around afterwards
+      (advice-remove #'org-pandoc-sentinel 'hugo-advice))))
+#+end_src
+
+* Drag and Drop
+#+begin_src emacs-lisp
+(defun my-dnd-func (event)
+  (interactive "e")
+  (goto-char (nth 1 (event-start event)))
+  (x-focus-frame nil)
+  (let* ((payload (car (last event)))
+         (type (car payload))
+         (fname (cadr payload))
+         (img-regexp "\\(png\\|jp[e]?g\\)\\>"))
+    (cond
+     ;; insert image link
+     ((and  (eq 'drag-n-drop (car event))
+            (eq 'file type)
+            (string-match img-regexp fname))
+      (insert (format "[[%s]]" fname))
+      (org-display-inline-images t t))
+     ;; insert image link with caption
+     ((and  (eq 'C-drag-n-drop (car event))
+            (eq 'file type)
+            (string-match img-regexp fname))
+      (insert "#+ATTR_ORG: :width 300\n")
+      (insert (concat  "#+CAPTION: " (read-input "Caption: ") "\n"))
+      (insert (format "[[%s]]" fname))
+      (org-display-inline-images t t))
+     ;; C-drag-n-drop to open a file
+     ((and  (eq 'C-drag-n-drop (car event))
+            (eq 'file type))
+      (find-file fname))
+     ((and (eq 'M-drag-n-drop (car event))
+           (eq 'file type))
+      (insert (format "[[attachfile:%s]]" fname)))
+     ;; regular drag and drop on file
+     ((eq 'file type)
+      (insert (format "[[%s]]\n" fname)))
+     (t
+      (error "I am not equipped for dnd on %s" payload)))))
+
+
+(define-key org-mode-map (kbd "<drag-n-drop>") 'my-dnd-func)
+(define-key org-mode-map (kbd "<C-drag-n-drop>") 'my-dnd-func)
+(define-key org-mode-map (kbd "<S-drag-n-drop>") 'my-dnd-func)
 #+end_src
