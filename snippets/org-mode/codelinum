@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: codelinum
+# key: clm
+# --
+{{< highlight ${1:language} "linenos=inline">}}
+$0
+{{</highlight>}}
