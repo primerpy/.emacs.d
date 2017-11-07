@@ -14,11 +14,24 @@ because it's more on convenient on Dvorak. Though for the most part, I
 try to follow Emacs and assign bindings by mnemonics, would should
 make sense for any layout.
 
+
+* Quickly Visiting Emacs Config
+#+begin_src emacs-lisp
+(defun iz/visit-emacs-config ()
+  (interactive)
+  (find-file "~/.emacs.d/config.org"))
+
+(global-set-key (kbd "C-x e") 'iz/visit-emacs-config)
+#+end_src
+
 * Personal Information
 
 #+begin_src emacs-lisp
 (setq user-full-name "Isaac Zhou"
-      user-mail-address "isaaczhou85@gmail.com")
+      user-mail-address "isaaczhou85@gmail.com"
+      calendar-latitude 40.7
+      calendar-longitude 74.0
+      calendar-location-name "New York, NY")
 #+end_src
 
 * Customize settings
@@ -87,15 +100,6 @@ Here's some configuration for [[https://github.com/bbatsov/solarized-emacs/][bba
   :ensure t
   :init
   (load-theme 'waher))
-#+end_src
-
-** Leuven
-#+begin_src emacs-lisp :tangle no
-(use-package leuven-theme
-  if (window-system)
-  :ensure t
-  :init
-  (load-theme 'leuven))
 #+end_src
 
 ** Convenient theme functions
@@ -320,20 +324,13 @@ good column number to do that.
 (setq org-tags-column 45)
 #+end_src
 
-** Set Enironment Path
-#+begin_src emacs-lisp
-(setq org-babel-python-command "/home/isaac/anaconda3/bin/python3")
-(setq py-python-command "/home/isaac/anaconda3/bin/python3")
-(setq exec-path (append exec-path '("/home/isaac/anaconda3/bin/")))
-(setq python-shell-prompt-detect-failure-warning nil)
-#+end_src
-
 ** Org babel languages
-
 
 #+begin_src emacs-lisp
 (require 'org-install)
 (require 'ob-ipython)
+(setq org-babel-python-command "/home/isaac/anaconda3/bin/python3")
+(setq py-python-command "/home/isaac/anaconda3/bin/python3")
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -350,11 +347,31 @@ good column number to do that.
    (sqlite . t)
    (js . t)))
 
-
-(setq org-confirm-babel-evaluate nil)
+(defun my-org-confirm-babel-evaluate (lang body)
+  "Do not confirm evaluation for these languages."
+  (not (or (string= lang "C")
+           (string= lang "ipython")
+           (string= lang "java")
+           (string= lang "python")
+           (string= lang "emacs-lisp")
+           (string= lang "sqlite"))))
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 
 ;;; display/update images in the buffer after I evaluate
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+#+end_src
+
+** Readline
+#+begin_src emacs-lisp
+(with-eval-after-load 'python
+  (defun python-shell-completion-native-try ()
+    "Return non-nil if can trigger native completion."
+    (let ((python-shell-completion-native-enable t)
+          (python-shell-completion-native-output-timeout
+           python-shell-completion-native-try-output-timeout))
+      (python-shell-completion-native-get-completions
+       (get-buffer-process (current-buffer))
+       nil "_"))))
 #+end_src
 
 ** Org babel/source blocks
@@ -673,6 +690,13 @@ used.
                   "http://usesthis.com/feed/")))
 #+end_src
 
+** Emacs IPython Notebook
+#+begin_src emacs-lisp
+(use-package ein
+  :ensure t
+  :defer t)
+#+end_src
+
 ** Expand region
 
 #+begin_src emacs-lisp
@@ -704,6 +728,7 @@ it.
   :defer 10
   :config (setq flycheck-html-tidy-executable "tidy5"))
 #+end_src
+
 
 *** Linter setups
 
@@ -744,7 +769,7 @@ it from the [[https://www.youtube.com/watch?v%3D2TSKxxYEbII][package highlight t
          ("\\.md\\'"       . markdown-mode)))
 #+end_src
 
-** Multiple cursors
+* Multiple cursors
 
 We'll also need to ~(require 'multiple-cusors)~ because of [[https://github.com/magnars/multiple-cursors.el/issues/105][an autoload issue]].
 
@@ -970,7 +995,6 @@ According to [[http://emmet.io/][their website]], "Emmet — the essential toolk
   (add-hook 'css-mode-hook 'emmet-mode))
 #+end_src
 
-
 ** Zoom-frm
 
 =zoom-frm= is a nice package that allows you to resize the text of
@@ -1175,13 +1199,6 @@ Luckily, I can modify the way Emacs formats code with this configuration.
 (add-hook 'java-mode-hook 'my-c-mode-hook)
 #+end_src
 
-** Jasmin
-Mode for editing Jasmin Java bytecode assembler files.
-
-#+BEGIN_SRC emacs-lisp
-(use-package jasmin)
-#+END_SRC
-
 ** Rust
 
 #+BEGIN_SRC emacs-lisp
@@ -1238,14 +1255,7 @@ Convenience bindings to use doc-view with the arrow keys.
 #+begin_src emacs-lisp
 #+end_src
 * Python IDE
-** Set Environment Python, use python3
 #+begin_src emacs-lisp
-(setq py-python-command "/home/isaac/anaconda3/bin/python3")
-#+end_src
-
-** IDE Setup 
-
- #+begin_src emacs-lisp
 (require 'package)
 (package-initialize)
 
@@ -1434,101 +1444,35 @@ May be necessary for some GUI environments (e.g., Mac OS X)")
 
     ))
 ;; End of Python IDE set up
- #+end_src
-
-** Anaconda Mode
-#+begin_src emacs-lisp
-(add-hook 'python-mode-hook 'anaconda-mode 'ac-anaconda-setup)
-#+end_src
-
-* Neotree
-#+begin_src emacs-lisp
-(add-to-list 'load-path "/home/isaac/.emacs.d/neotree")
-(require 'neotree)
-(global-set-key [f12] 'neotree-toggle)
-(setq-default neo-show-hidden-files t)
 #+end_src
 * General Setup
-** Auto pairing parenthesis etc.
- #+begin_src emacs-lisp
+  #+begin_src emacs-lisp
 (electric-pair-mode 1)
- #+end_src
-** Snippet
-I want to load sinppets in orgmode
- #+begin_src emacs-lisp
+  #+end_src
+* Snippet
+I want to load snippets in orgmode
+#+begin_src emacs-lisp
 (require 'yasnippet)
 (yas-global-mode 1)
- #+end_src
+#+end_src
+
 * Javascript
-enable js2-mode
 #+begin_src emacs-lisp
 (add-hook 'js2-mode-hook 'ac-js2-mode)
+(setq ac-js2-evaluate-calls t)
 #+end_src
 * Autocomplete
 #+begin_src emacs-lisp
 (ac-config-default)
 (global-auto-complete-mode t)
-(setq ac-auto-show-menu    0.05)
-(setq ac-delay             0.05)
+(setq ac-auto-show-menu    0.2)
+(setq ac-delay             0.2)
 (setq ac-menu-height       20)
 (setq ac-auto-start t)
 (setq ac-show-menu-immediately-on-auto-complete t)
 #+end_src
-* Prettier
-#+begin_src emacs-lisp
-(require 'prettier-js)
-
-(add-hook 'js2-mode-hook 'prettier-js-mode)
-(add-hook 'web-mode-hook 'prettier-js-mode)
-
-(setq prettier-js-args '(
-  "--trailing-comma" "all"
-  "--bracket-spacing" "false"
-))
-
-(defun enable-minor-mode (my-pair)
-  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
-  (if (buffer-file-name)
-      (if (string-match (car my-pair) buffer-file-name)
-      (funcall (cdr my-pair)))))
-
-(add-hook 'web-mode-hook #'(lambda ()
-                            (enable-minor-mode
-                             '("\\.jsx?\\'" . prettier-js-mode))))
-(add-to-list 'load-path "~/.emacs.d/elpa/")
-#+end_src
-
-* Node
-** Add Node Modules Path
-#+begin_src emacs-lisp
-(defvar add-node-modules-path-debug nil
-  "Enable verbose output when non nil.")
-
-;;;###autoload
-(defun add-node-modules-path ()
-  "Search the current buffer's parent directories for `node_modules/.bin`.
-If it's found, then add it to the `exec-path'."
-  (interactive)
-  (let* ((root (locate-dominating-file
-                (or (buffer-file-name) default-directory)
-                "node_modules"))
-         (path (and root
-                    (expand-file-name "node_modules/.bin/" root))))
-    (if root
-        (progn
-          (make-local-variable 'exec-path)
-          (add-to-list 'exec-path path)
-          (when add-node-modules-path-debug
-            (message (concat "added " path  " to exec-path"))))
-      (when add-node-modules-path-debug
-        (message (concat "node_modules not found in " root))))))
-
-(provide 'add-node-modules-path)
-#+end_src
-
-* Ox-Pandoc
-
-** Ox-Pandoc setup
+* Blogging
+** Ox-Pandoc Setup
 #+begin_src emacs-lisp
 (use-package ox-pandoc
   :after ox
@@ -1543,18 +1487,16 @@ If it's found, then add it to the `exec-path'."
   (setq org-pandoc-options-for-docx '((standalone . nil))))
 #+end_src
 
-
-** Function
+** Exporting Function
 #+begin_src emacs-lisp
 (defun isaac/org-hugo-export ()
   "Export current subheading to markdown using pandoc."
   (interactive)
   ;; Save cursor position
   (save-excursion
-    ;; Go to top level heading for subtree (you can change the number 10
-    ;; if you /really/ need more than 10 sublevels...)
+    ;; Go to top level heading for subtree
     (unless (eq (org-current-level) 1)
-      (outline-up-heading 10))
+      (org-up-heading-all 10))
     ;; Set export format, pandoc options, post properties
     (let* ((org-pandoc-format 'markdown)
            (org-pandoc-options-for-markdown '((standalone . t)
@@ -1565,88 +1507,55 @@ If it's found, then add it to the `exec-path'."
            (title (format "\"%s\"" (org-element-property :title hl)))
            (slug (format "\"%s\"" (org-element-property :SLUG hl)))
            (date (format "\"%s\"" (org-element-property :DATE hl)))
-           (tags (format "[\"%s\"]" (org-element-property :TAGS hl)))
+           (tags (org-get-tags-at))
            (categories
-            (format "[\"%s\"]"
-                    (mapconcat 'identity (org-get-tags) "\",\""))))
-      ;; Make the export
-      (org-export-to-file
-          'pandoc
-          (org-export-output-file-name
-           (concat (make-temp-name ".tmp") ".org") t)
-        nil t nil nil nil
-        (lambda (f) (org-pandoc-run-to-buffer-or-file f 'markdown t nil)))
-      ;; Use advice-add to add advice to existing process sentinel
-      ;; to modify file /after/ the export process has finished.
-      (advice-add
-       #'org-pandoc-sentinel
-       :after
-       `(lambda (process event)
-          ;; Grab the file using with-temp-file, which saves our changes
-          ;; after evaluation.
-          (with-temp-file ,filename
-            (insert-file-contents ,filename)
-            (goto-char (point-min))
-            ;; Remove default header
-            (re-search-forward "---\\(.\\|\n\\)+?---\n\n")
-            (replace-match "")
-            (goto-char (point-min))
-            ;; Insert new properties
-            (insert
-             (format
-              "---\ntitle: %s\nslug: %s\ndate: %s\ntags: %s\n---\n\n"
-              ,title ,slug ,date ,tags))
-            ;; Demote headings and tweak code blocks
-            (dolist (reps '(("^#" . "##")
-                            ("\n``` {\\.\\(.+?\\)}" . "```\\1")))
-              (goto-char (point-min))
-              (while (re-search-forward (car reps) nil t)
-                (replace-match (cdr reps))))))
-       '((name . "hugo-advice")))
-      ;; We don't want our advice to stick around afterwards
-      (advice-remove #'org-pandoc-sentinel 'hugo-advice))))
+            (format "[\"%s\"]" (mapconcat 'identity tags "\",\""))))
+      (if (string= (org-get-todo-state) "DRAFT")
+          (message "Draft not exported")
+        (progn
+          ;; Make the export
+          (org-export-to-file
+              'pandoc
+              (org-export-output-file-name
+               (concat (make-temp-name ".tmp") ".org") t)
+            nil t nil nil nil
+            (lambda (f)
+              (org-pandoc-run-to-buffer-or-file f 'markdown t nil)))
+          ;; Use advice-add to add advice to existing process sentinel
+          ;; to modify file /after/ the export process has finished.
+          (advice-add
+           #'org-pandoc-sentinel
+           :after
+           `(lambda (process event)
+              (with-temp-file ,filename
+                (insert-file-contents ,filename)
+                (goto-char (point-min))
+                ;; Remove default header
+                (re-search-forward "---\\(.\\|\n\\)+?---\n\n")
+                (replace-match "")
+                (goto-char (point-min))
+                ;; Insert new properties
+                (insert
+                 (format
+                  "---\ntitle: %s\nslug: %s\ndate: %s\ncategories: %s\n---\n\n"
+                  ,title ,slug ,date ,categories))
+                ;; Demote headings and tweak code blocks
+                (dolist (reps '(("^#" . "##")
+                                ("``` {\\.\\(.+?\\)}" . "```\\1")))
+                  (goto-char (point-min))
+                  (while (re-search-forward (car reps) nil t)
+                    (replace-match (cdr reps))))))
+           '((name . "hugo-advice")))
+          ;; We don't want our advice to stick around afterwards
+          (advice-remove #'org-pandoc-sentinel 'hugo-advice)
+          (when (string= (org-get-todo-state) "↑")
+            (org-todo)))))))
 #+end_src
-
-* Drag and Drop
+* Quickly Visiting Worklog
 #+begin_src emacs-lisp
-(defun my-dnd-func (event)
-  (interactive "e")
-  (goto-char (nth 1 (event-start event)))
-  (x-focus-frame nil)
-  (let* ((payload (car (last event)))
-         (type (car payload))
-         (fname (cadr payload))
-         (img-regexp "\\(png\\|jp[e]?g\\)\\>"))
-    (cond
-     ;; insert image link
-     ((and  (eq 'drag-n-drop (car event))
-            (eq 'file type)
-            (string-match img-regexp fname))
-      (insert (format "[[%s]]" fname))
-      (org-display-inline-images t t))
-     ;; insert image link with caption
-     ((and  (eq 'C-drag-n-drop (car event))
-            (eq 'file type)
-            (string-match img-regexp fname))
-      (insert "#+ATTR_ORG: :width 300\n")
-      (insert (concat  "#+CAPTION: " (read-input "Caption: ") "\n"))
-      (insert (format "[[%s]]" fname))
-      (org-display-inline-images t t))
-     ;; C-drag-n-drop to open a file
-     ((and  (eq 'C-drag-n-drop (car event))
-            (eq 'file type))
-      (find-file fname))
-     ((and (eq 'M-drag-n-drop (car event))
-           (eq 'file type))
-      (insert (format "[[attachfile:%s]]" fname)))
-     ;; regular drag and drop on file
-     ((eq 'file type)
-      (insert (format "[[%s]]\n" fname)))
-     (t
-      (error "I am not equipped for dnd on %s" payload)))))
+(defun iz/visit-worklog-config ()
+  (interactive)
+  (find-file "~/Dropbox/worklogs/2017WorkLog.org"))
 
-
-(define-key org-mode-map (kbd "<drag-n-drop>") 'my-dnd-func)
-(define-key org-mode-map (kbd "<C-drag-n-drop>") 'my-dnd-func)
-(define-key org-mode-map (kbd "<S-drag-n-drop>") 'my-dnd-func)
+(global-set-key (kbd "C-x w") 'iz/visit-worklog-config)
 #+end_src
