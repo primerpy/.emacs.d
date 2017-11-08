@@ -43,7 +43,7 @@
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (ac-helm helm-swoop helm-R helm-ack helm-anything company-anaconda ac-anaconda eslintd-fix eslint-fix prettier-js rjsx-mode multi-web-mode web-mode ac-emmet cdlatex auto-complete-auctex company-auctex readline-complete company ac-js2 cider clojure-mode-extra-font-locking rainbow-mode impatient-mode ob-ipython org org-plus-contrib neotree leuven-theme jedi epc ess ess-R-data-view ess-R-object-popup ess-smart-equals ess-smart-underscore ess-view org-bullets pandoc rust-mode crux undo-tree latex-preview-pane latex-extra xquery-mode virtualenvwrapper quickrun slime shell-pop scratch zoom-frm emmet-mode yasnippet visual-regexp-steroids visual-regexp typescript-mode smooth-scrolling smex smartscan smartparens restclient geiser racket-mode python-mode olivetti multiple-cursors markdown-mode macrostep gist flycheck expand-region ein edit-server magit helm-ag helm-projectile dash-at-point clojure-mode c-eldoc android-mode ace-window ace-jump-mode ag ido-vertical-mode transpose-frame ox-pandoc exec-path-from-shell page-break-lines solarized-theme cyberpunk-theme use-package)))
+    (ox-hugo ac-helm helm-swoop helm-R helm-ack helm-anything company-anaconda ac-anaconda eslintd-fix eslint-fix prettier-js rjsx-mode multi-web-mode web-mode ac-emmet cdlatex auto-complete-auctex company-auctex readline-complete company ac-js2 cider clojure-mode-extra-font-locking rainbow-mode impatient-mode ob-ipython org-plus-contrib neotree leuven-theme jedi epc ess ess-R-data-view ess-R-object-popup ess-smart-equals ess-smart-underscore ess-view org-bullets pandoc rust-mode crux undo-tree latex-preview-pane latex-extra xquery-mode virtualenvwrapper quickrun slime shell-pop scratch zoom-frm emmet-mode yasnippet visual-regexp-steroids visual-regexp typescript-mode smooth-scrolling smex smartscan smartparens restclient geiser racket-mode python-mode olivetti multiple-cursors markdown-mode macrostep gist flycheck expand-region ein edit-server magit helm-ag helm-projectile dash-at-point clojure-mode c-eldoc android-mode ace-window ace-jump-mode ag ido-vertical-mode transpose-frame ox-pandoc exec-path-from-shell page-break-lines solarized-theme cyberpunk-theme use-package)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -84,7 +84,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 130 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :stipple nil :background "#000000" :foreground "#d3d3d3" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
  '(helm-bookmark-directory ((t (:inherit helm-ff-directory))))
  '(helm-buffer-directory ((t (:inherit helm-ff-directory))))
  '(helm-ff-directory ((t (:foreground "HotPink")))))

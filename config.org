@@ -359,6 +359,8 @@ good column number to do that.
 
 ;;; display/update images in the buffer after I evaluate
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+
+(setq org-confirm-babel-evaluate nil)
 #+end_src
 
 ** Readline
@@ -982,6 +984,50 @@ idle time.
   (yas-global-mode))
 #+end_src
 
+#+begin_src emacs-lisp
+(require 'yasnippet)
+(yas-global-mode 1)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq default-cursor-color "gray")
+(setq yasnippet-can-fire-cursor-color "purple")
+
+;; It will test whether it can expand, if yes, cursor color -> green.
+(defun yasnippet-can-fire-p (&optional field)
+  (interactive)
+  (setq yas--condition-cache-timestamp (current-time))
+  (let (templates-and-pos)
+    (unless (and yas-expand-only-for-last-commands
+                 (not (member last-command yas-expand-only-for-last-commands)))
+      (setq templates-and-pos (if field
+                                  (save-restriction
+                                    (narrow-to-region (yas--field-start field)
+                                                      (yas--field-end field))
+                                    (yas--templates-for-key-at-point))
+                                (yas--templates-for-key-at-point))))
+    (and templates-and-pos (first templates-and-pos))))
+
+(defun my/change-cursor-color-when-can-expand (&optional field)
+  (interactive)
+  (when (eq last-command 'self-insert-command)
+    (set-cursor-color (if (my/can-expand)
+                          yasnippet-can-fire-cursor-color
+                        default-cursor-color))))
+
+(defun my/can-expand ()
+  "Return true if right after an expandable thing."
+  (or (abbrev--before-point) (yasnippet-can-fire-p)))
+
+ ; ;As pointed out by Dmitri, this will make sure it will update color when needed.
+(add-hook 'post-command-hook 'my/change-cursor-color-when-can-expand)
+
+(defun my/insert-space-or-expand ()
+  "For binding to the SPC SPC keychord."
+  (interactive)
+  (condition-case nil (or (my/hippie-expand-maybe nil) (insert "  "))))
+#+end_src
+
 ** Emmet
 
 According to [[http://emmet.io/][their website]], "Emmet — the essential toolkit for web-developers."
@@ -1449,18 +1495,24 @@ May be necessary for some GUI environments (e.g., Mac OS X)")
   #+begin_src emacs-lisp
 (electric-pair-mode 1)
   #+end_src
-* Snippet
-I want to load snippets in orgmode
-#+begin_src emacs-lisp
-(require 'yasnippet)
-(yas-global-mode 1)
-#+end_src
-
 * Javascript
-#+begin_src emacs-lisp
+
+** Use JS-2
+ #+begin_src emacs-lisp
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 (setq ac-js2-evaluate-calls t)
+ #+end_src
+
+** Use Node and Babel to evaluate JS in Org Mode
+#+begin_src emacs-lisp
+(setenv "NODE_PATH"
+  (concat
+   (getenv "HOME") "/Dropbox/React/node_modules"  ":"
+   (getenv "NODE_PATH")
+  )
+)
 #+end_src
+
 * Autocomplete
 #+begin_src emacs-lisp
 (ac-config-default)
@@ -1551,6 +1603,20 @@ I want to load snippets in orgmode
           (when (string= (org-get-todo-state) "↑")
             (org-todo)))))))
 #+end_src
+** Quickly Visiting Blog Dir
+
+#+begin_src emacs-lisp
+(defun iz/visit-blog-config ()
+  (interactive)
+  (find-file "~/Dropbox/BlogHugo"))
+
+(global-set-key (kbd "C-x q") 'iz/visit-blog-config)
+#+end_src
+** Ox-Hugo Setup
+#+begin_src emacs-lisp
+(require 'ox-hugo)
+#+end_src
+
 * Quickly Visiting Worklog
 #+begin_src emacs-lisp
 (defun iz/visit-worklog-config ()

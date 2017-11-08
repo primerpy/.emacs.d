@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: Hugo-Property-Subtree
+# key: hugop
+# --
+:PROPERTIES:
+:EXPORT_FILE_NAME:
+:EXPORT_DATE:
+:EXPORT_HUGO_MENU:
+:EXPORT_HUGO_CUSTOME_FRONT_MATTER:
+:END:
