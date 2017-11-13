@@ -14,6 +14,7 @@
         c-electric-slash
         dabbrev-expand
         delete-horizontal-space
+        dired-toggle-read-only
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
         emmet-expand-line
@@ -29,6 +30,7 @@
         org-ctrl-c-ctrl-c
         org-cycle
         org-delete-char
+        org-edit-src-save
         org-end-of-line
         org-force-self-insert
         org-kill-line
@@ -38,11 +40,13 @@
         org-time-stamp
         org-yank
         other-frame
+        overwrite-mode
         sgml-close-tag
         sgml-slash
         slime-autodoc-space
         string-rectangle
         transpose-words
+        wdired-finish-edit
         yas-expand
         ))
 
@@ -53,5 +57,7 @@
         helm-find-files
         ido-kill-buffer
         markdown-exdent-or-delete
+        markdown-forward-paragraph
+        markdown-outdent-or-delete
         mouse-set-region
         ))

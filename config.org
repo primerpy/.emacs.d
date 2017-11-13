@@ -419,6 +419,28 @@ I want beautiful bullets, not *
 (global-prettify-symbols-mode t)
 #+END_SRC
 
+** Anaconda Mode
+#+begin_src emacs-lisp
+(add-hook 'python-mode-hook 'ac-anaconda-setup)
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+#+end_src
+
+** Org Mode Table
+The current org mode table is not compatible with markdown table
+#+begin_src emacs-lisp
+(defun cleanup-org-tables ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "-+-" nil t) (replace-match "-|-"))
+    ))
+
+(add-hook 'markdown-mode-hook 'orgtbl-mode)
+(add-hook 'markdown-mode-hook
+          (lambda()
+            (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+#+end_src
+
 * Tramp
 
 #+begin_src emacs-lisp :tangle no
@@ -622,7 +644,12 @@ tools I use).
          ("C-x b" . helm-mini)
          ("C-`" . helm-resume)
          ("M-x" . helm-M-x)
-         ("C-x C-f" . helm-find-files)))
+         ("C-x C-f" . helm-find-files)
+         ("C-c f" . copy-file)
+         ("C-c d" . copy-directory)
+         ("C-c n" . rename-file)
+         
+))
 #+end_src
 
 ** Magit
@@ -961,8 +988,24 @@ around so much.
 ** Webmode
 
 #+begin_src emacs-lisp :tangle no
+(require 'web-mode)
 (use-package web-mode
   :ensure t)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.api\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("/some/react/path/.*\\.js[x]?\\'" . web-mode))
+
+(setq web-mode-content-types-alist
+  '(("json" . "/some/path/.*\\.api\\'")
+    ("xml"  . "/other/path/.*\\.api\\'")
+    ("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
 #+end_src
 
 ** Yasnippet
@@ -1517,12 +1560,13 @@ May be necessary for some GUI environments (e.g., Mac OS X)")
 #+begin_src emacs-lisp
 (ac-config-default)
 (global-auto-complete-mode t)
-(setq ac-auto-show-menu    0.2)
-(setq ac-delay             0.2)
+(setq ac-auto-show-menu    0.15)
+(setq ac-delay             0.15)
 (setq ac-menu-height       20)
 (setq ac-auto-start t)
 (setq ac-show-menu-immediately-on-auto-complete t)
 #+end_src
+
 * Blogging
 ** Ox-Pandoc Setup
 #+begin_src emacs-lisp
@@ -1612,6 +1656,15 @@ May be necessary for some GUI environments (e.g., Mac OS X)")
 
 (global-set-key (kbd "C-x q") 'iz/visit-blog-config)
 #+end_src
+** Quickly Visiting isaaczhou Dir
+#+begin_src emacs-lisp
+(defun iz/visit-iz-config ()
+  (interactive)
+  (find-file "~/Dropbox/BlogHugo/isaaczhou"))
+
+(global-set-key (kbd "C-c i") 'iz/visit-iz-config)
+#+end_src
+
 ** Ox-Hugo Setup
 #+begin_src emacs-lisp
 (require 'ox-hugo)
