@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: isaaczhouitemized
+# key: izi
+# --
+
++++
+type = "itemized"
+author = "Isaac Zhou"
+date = `(format-time-string "%Y-%m-%d")`
+title = ""
+description = ""
+featured = ""
+featuredpath = "date"
+featuredalt = ""
+linktitle = ""
+format = ""
+link = ""
++++
