@@ -39,6 +39,8 @@
         org-shiftmetaright
         org-time-stamp
         org-yank
+        orgtbl-hijacker-command-109
+        orgtbl-self-insert-command
         other-frame
         overwrite-mode
         sgml-close-tag

@@ -13,7 +13,9 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
-    ("f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b" default)))
+    ("9a155066ec746201156bb39f7518c1828a73d67742e11271e4f24b7b178c4710" "f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b" default)))
+ '(debug-on-error t)
+ '(fci-rule-color "#383838")
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -37,13 +39,15 @@
  '(hl-fg-colors
    (quote
     ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(hl-sexp-background-color "#efebe9")
  '(magit-diff-use-overlays nil)
  '(nrepl-message-colors
    (quote
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (org python-mode web-beautify web company-web react-snippets ox-hugo ac-helm helm-swoop helm-R helm-ack helm-anything company-anaconda ac-anaconda eslintd-fix eslint-fix prettier-js rjsx-mode multi-web-mode web-mode ac-emmet cdlatex auto-complete-auctex company-auctex readline-complete company ac-js2 cider clojure-mode-extra-font-locking rainbow-mode impatient-mode ob-ipython org-plus-contrib neotree leuven-theme jedi epc ess ess-R-data-view ess-R-object-popup ess-smart-equals ess-smart-underscore ess-view org-bullets pandoc rust-mode crux undo-tree latex-preview-pane latex-extra xquery-mode virtualenvwrapper quickrun slime shell-pop scratch zoom-frm emmet-mode yasnippet visual-regexp-steroids visual-regexp typescript-mode smooth-scrolling smex smartscan smartparens restclient geiser racket-mode olivetti multiple-cursors markdown-mode macrostep gist flycheck expand-region ein edit-server magit helm-ag helm-projectile dash-at-point clojure-mode c-eldoc android-mode ace-window ace-jump-mode ag ido-vertical-mode transpose-frame ox-pandoc exec-path-from-shell page-break-lines solarized-theme cyberpunk-theme use-package)))
+    (powerline moe-theme ubuntu-theme waher-theme github-theme edit-indirect python-mode web-beautify web company-web react-snippets ox-hugo ac-helm helm-swoop helm-R helm-ack helm-anything company-anaconda ac-anaconda eslintd-fix eslint-fix prettier-js rjsx-mode multi-web-mode web-mode ac-emmet cdlatex auto-complete-auctex company-auctex readline-complete company ac-js2 cider clojure-mode-extra-font-locking rainbow-mode impatient-mode ob-ipython org-plus-contrib neotree jedi epc ess ess-R-data-view ess-R-object-popup ess-smart-equals ess-smart-underscore ess-view org-bullets pandoc rust-mode crux undo-tree latex-preview-pane latex-extra xquery-mode virtualenvwrapper quickrun slime shell-pop scratch zoom-frm emmet-mode yasnippet visual-regexp-steroids visual-regexp typescript-mode smooth-scrolling smex smartscan smartparens restclient geiser racket-mode olivetti multiple-cursors markdown-mode macrostep gist flycheck expand-region ein edit-server magit helm-ag helm-projectile dash-at-point clojure-mode c-eldoc android-mode ace-window ace-jump-mode ag ido-vertical-mode transpose-frame ox-pandoc exec-path-from-shell page-break-lines solarized-theme cyberpunk-theme use-package)))
+ '(pdf-view-midnight-colors (quote ("#969896" . "#f8eec7")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -84,7 +88,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#000000" :foreground "#d3d3d3" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
- '(helm-bookmark-directory ((t (:inherit helm-ff-directory))))
- '(helm-buffer-directory ((t (:inherit helm-ff-directory))))
- '(helm-ff-directory ((t (:foreground "HotPink")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "PfEd" :family "DejaVu Sans Mono")))))

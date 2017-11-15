@@ -7,14 +7,6 @@ the way I've become accustomed to many different tweaks for it.
 This configuration uses the [[https://github.com/jwiegley/use-package][use-package]] package from John Wiegley, which is
 a fantastic way to manage package configurations.
 
-If you see any keybindings that seem weird to you, it's probably
-because I type with the Dvorak keyboard layout, so things'll probably
-seem strange on other keyboard layouts. I may assign a keybinding just
-because it's more on convenient on Dvorak. Though for the most part, I
-try to follow Emacs and assign bindings by mnemonics, would should
-make sense for any layout.
-
-
 * Quickly Visiting Emacs Config
 #+begin_src emacs-lisp
 (defun iz/visit-emacs-config ()
@@ -44,6 +36,41 @@ customize settings in [[file:init.el][init.el]].
 (load custom-file)
 #+end_src
 
+** Fira Code Fonts
+#+begin_src emacs-lisp
+(when (window-system)
+  (set-default-font "Fira Code"))
+(let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
+               (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
+               (36 . ".\\(?:>\\)")
+               (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
+               (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
+               (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
+               (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
+               (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
+               (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
+               (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
+               (48 . ".\\(?:x[a-zA-Z]\\)")
+               (58 . ".\\(?:::\\|[:=]\\)")
+               (59 . ".\\(?:;;\\|;\\)")
+               (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
+               (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
+               (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
+               (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
+               (91 . ".\\(?:]\\)")
+               (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
+               (94 . ".\\(?:=\\)")
+               (119 . ".\\(?:ww\\)")
+               (123 . ".\\(?:-\\)")
+               (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
+               (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
+               )
+             ))
+  (dolist (char-regexp alist)
+    (set-char-table-range composition-function-table (car char-regexp)
+                          `([,(cdr char-regexp) 0 font-shape-gstring]))))
+#+end_src
+
 * Theme
 ** Cyberpunk theme
 
@@ -61,6 +88,8 @@ boxes around the mode line.
                         :box nil)
     (set-face-attribute `mode-line-inactive nil
                         :box nil)))
+(require 'powerline)
+(powerline-default-theme)
 #+end_src
 
 I tend to switch themes more often than normal. For example, switching
@@ -100,6 +129,20 @@ Here's some configuration for [[https://github.com/bbatsov/solarized-emacs/][bba
   :ensure t
   :init
   (load-theme 'waher))
+#+end_src
+
+** Leuven theme
+#+begin_src emacs-lisp
+(use-package leuven-theme
+  :if (window-system)
+  :ensure t
+  :init
+  (progn
+    (load-theme 'leuven t)
+    (set-face-attribute `mode-line nil
+                        :box nil)
+    (set-face-attribute `mode-line-inactive nil
+                        :box nil)))
 #+end_src
 
 ** Convenient theme functions
@@ -633,8 +676,9 @@ tools I use).
             :commands helm-projectile
             :bind ("C-c p h" . helm-projectile))
           (use-package helm-ag :defer 10  :ensure t)
-          (setq helm-locate-command "mdfind -interpret -name %s %s"
-                helm-ff-newfile-prompt-p nil
+          (setq helm-locate-command "locate %s -e -A --regex %s"
+                ;; "mdfind -interpret -name %s %s"
+                ;; helm-ff-newfile-prompt-p nil
                 helm-M-x-fuzzy-match t)
           (helm-mode)
           (use-package helm-swoop
@@ -651,6 +695,8 @@ tools I use).
          
 ))
 #+end_src
+
+
 
 ** Magit
 
